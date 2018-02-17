@@ -1,0 +1,21 @@
+{
+  "name": "callbag-mock",
+  "version": "1.0.0",
+  "description": "Callbag mock with manual emitting and signal tapping",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krawaller/callbag-mock.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test.js"
+  },
+  "author": "David Waller",
+  "license": "MIT",
+  "keywords": [
+    "callbag"
+  ],
+  "devDependencies": {
+    "tape": "^4.8.0"
+  }
+}
