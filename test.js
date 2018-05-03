@@ -25,8 +25,6 @@ test('it works with full signature', t => {
 });
 
 test('the receivedData method works', t => {
-  let history = [];
-
   const source = makeMockCallbag(true);
   const sink = makeMockCallbag();
 
@@ -41,5 +39,23 @@ test('the receivedData method works', t => {
     'values are registered as expected'
   );
 
+  t.end();
+});
+
+test('the connected method works', t => {
+  const source = makeMockCallbag(true);
+  const sink = makeMockCallbag();
+  t.ok(!source.checkConnection());
+  t.ok(!sink.checkConnection());
+  source(0, sink);
+  t.ok(source.checkConnection());
+  t.ok(sink.checkConnection());
+  sink.emit(2);
+  t.ok(!source.checkConnection());
+  t.ok(!sink.checkConnection());
+  source(0, sink);
+  source.emit(2);
+  t.ok(!source.checkConnection());
+  t.ok(!sink.checkConnection());
   t.end();
 });
