@@ -9,22 +9,26 @@ Useful for unit testing other callbag packages, or for triggering signals in cal
 ## usage
 
 ```typescript
-(name: string, reporter: function, isSource: boolean) => mock
+(isSource?: boolean, reporter?: function) => mock
 ```
 
-The `name` is used in the reporter call. The `isSource` boolean decides whether the mock will handshake back when initialised.
+The `isSource` boolean decides whether the mock will handshake back when initialised (meaning it is a source).
 
-The `reporter` will be called each time the mock receives a signal:
+A `reporter`, if provided, will be called each time the mock receives a signal:
 
 ```typescript
-(name: string, in: 'body' | 'talkback', t: 0 | 1 | 2, d: any) => void
+(t: 0 | 1 | 2, d: any, in: 'body' | 'talkback') => void
 ```
+
+The third `in` parameter tells you whether the signal was received in the function body or the talkback.
 
 The mock instance has an `.emit` method for manually triggering `(t,d)`signals:
 
 ```typescript
 (t: 0 | 1 | 2, d: any)
 ```
+
+Finally there is a `.getReceivedData` method to get all received data so far.
 
 ## example
 
@@ -42,4 +46,6 @@ source(0, sink);
 
 source.emit(1, 'foo'); // 'sink', 'body', 1, 'foo'
 sink.emit(1, 'bar'); // 'source', 'talkback', 1, 'bar'
+
+sink.getReceivedData(); // ['foo']
 ```
