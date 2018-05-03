@@ -4,7 +4,7 @@
 
 Useful for unit testing other callbag packages, or for triggering signals in callbag chains from non-callbag code.
 
-`npm install callbag-map-to`
+`npm install callbag-mock`
 
 ## usage
 
