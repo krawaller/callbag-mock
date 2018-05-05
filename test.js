@@ -59,3 +59,43 @@ test('the connected method works', t => {
   t.ok(!sink.checkConnection());
   t.end();
 });
+
+test('the talkback query methods work', t => {
+  const source = makeMockCallbag(true);
+  const sink = makeMockCallbag();
+  source(0, sink);
+  t.equal(source.getTalkback(), sink.getPartnerTalkback(), 'sink got source talkback');
+  t.equal(sink, source.getPartnerTalkback(), 'source got sink as talkback');
+  t.ok(!sink.getTalkback(), 'sink has no talkback');
+  source.emit(2, 'error');
+  t.ok(!source.getTalkback(), 'source talkback cleared after termination');
+  t.ok(!source.getPartnerTalkback(), 'source partner talkback cleared after termination');
+  t.ok(!sink.getPartnerTalkback(), 'sink partner talkback cleared after termination');
+  t.end();
+});
+
+test('the getMessages method works', t => {
+  const source = makeMockCallbag(true);
+  const sink = makeMockCallbag();
+  source(0, sink);
+  const sourceTalkback = source.getTalkback();
+  sink.emit(1);
+  source.emit(1, 'foo');
+  sink.emit(2);
+  t.deepEqual(
+    source.getMessages(),
+    [
+      [0, sink],
+      [1, undefined],
+      [2, undefined]
+    ]
+  );
+  t.deepEqual(
+    sink.getMessages(),
+    [
+      [0, sourceTalkback],
+      [1, 'foo']
+    ]
+  );
+  t.end();
+});

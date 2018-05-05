@@ -6,35 +6,48 @@ function makeMockCallbag(...args) {
     else if (typeof a === 'function') report = a;
   });
 
-  let talkback;
+  let partnerTalkback;
+  let myTalkback;
   let receivedData = [];
+  let messages = [];
   let mock = (t, d) => {
     report(t, d, 'body');
+    messages.push([t, d]);
     if (t === 0){
-      talkback = d;
-      if (isSource) talkback(0, (st, sd) => {
-        report(st, sd, 'talkback');
-        if (st === 1 && sd !== undefined) {
-          receivedData.push(sd);
-        } else if (st === 2) {
-          talkback = undefined;
-        }
-      });
+      partnerTalkback = d;
+      if (isSource) {
+        myTalkback = (st, sd) => {
+          report(st, sd, 'talkback');
+          messages.push([st, sd]);
+          if (st === 1 && sd !== undefined) {
+            receivedData.push(sd);
+          } else if (st === 2) {
+            partnerTalkback = undefined;
+            myTalkback = undefined;
+          }
+        };
+        partnerTalkback(0, myTalkback)
+      };
     } else if (t === 1 && d !== undefined) {
       receivedData.push(d);
     } else if (t === 2) {
-      talkback = undefined;
+      partnerTalkback = undefined;
+      myTalkback = undefined;
     }
   };
   mock.emit = (t, d) => {
-    if (!talkback) throw new Error(`Can't emit before anyone has connected`);
-    talkback(t, d);
+    if (!partnerTalkback) throw new Error(`Can't emit before anyone has connected`);
+    partnerTalkback(t, d);
     if (t === 2){
-      talkback = undefined;
+      myTalkback = undefined;
+      partnerTalkback = undefined;
     }
   };
   mock.getReceivedData = () => receivedData;
-  mock.checkConnection = () => !!talkback;
+  mock.checkConnection = () => !!partnerTalkback;
+  mock.getTalkback = () => myTalkback;
+  mock.getPartnerTalkback = () => partnerTalkback;
+  mock.getMessages = () => messages;
   return mock;
 }
 

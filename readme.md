@@ -30,6 +30,10 @@ The mock instance has an `.emit(t,d)` method for manually triggering signals:
 
 There is a `.getReceivedData()` method to get all received data so far.
 
+Use `.getMessages()` if you want *all* messages as `[t, d]` tuples.
+
+Get references to sent talkbacks through `.getTalkback()` and received talkbacks through `.getPartnerTalkback()`.
+
 You can also `.checkConnection()` to see whether or not the callbag has a live connection.
 
 ## example
@@ -48,6 +52,9 @@ source.checkConnection(); // false
 sink.checkConnection(); // false
 
 source(0, sink);
+
+source.getTalkback() === sink.getPartnerTalkback() // true
+sink === source.getPartnerTalkback() // true
 
 source.emit(1, 'foo'); // 'sink', 'body', 1, 'foo'
 sink.emit(1, 'bar'); // 'source', 'talkback', 1, 'bar'
