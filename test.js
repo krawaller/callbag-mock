@@ -1,6 +1,6 @@
 let test = require('tape');
 
-let makeMockCallbag = require('./index');
+let makeMockCallbag = require('.');
 
 test('it works with full signature', t => {
   let history = [];
