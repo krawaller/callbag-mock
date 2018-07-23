@@ -1,6 +1,6 @@
 {
   "name": "callbag-mock",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Callbag mock with manual emitting and signal tapping",
   "repository": {
     "type": "git",
