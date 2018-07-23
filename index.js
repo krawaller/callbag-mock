@@ -51,4 +51,4 @@ function makeMockCallbag(...args) {
   return mock;
 }
 
-module.exports = makeMockCallbag;
+export default makeMockCallbag;
